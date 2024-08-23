@@ -24,7 +24,7 @@ const RegistrationForm = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch('student-registration-back.vercel.app/register', {
+      const response = await fetch('http://localhost:5000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
