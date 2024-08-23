@@ -24,7 +24,7 @@ const RegistrationForm = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch('https://scansafe-register-2bhxd3mmm-tanvi-patels-projects.vercel.app/register', {
+      const response = await fetch('student-registration-back.vercel.app/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
