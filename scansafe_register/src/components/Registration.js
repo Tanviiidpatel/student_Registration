@@ -11,7 +11,6 @@ const RegistrationForm = () => {
     futureGoal: ''
   });
 
-  // Handle input field changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -19,10 +18,10 @@ const RegistrationForm = () => {
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    console.log('Submitting form data:', formData); 
+
     try {
       const response = await fetch('http://localhost:5000/register', {
         method: 'POST',
@@ -36,7 +35,6 @@ const RegistrationForm = () => {
 
       if (response.ok) {
         alert('Registration successful!');
-        // Reset form data
         setFormData({
           name: '',
           email: '',
@@ -49,8 +47,8 @@ const RegistrationForm = () => {
         alert(result.message || 'Registration failed');
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('Error submitting form');
+      console.error('Error submitting form:', error); // Debugging log
+      alert('Error submitting form. Please try again later.');
     }
   };
 
