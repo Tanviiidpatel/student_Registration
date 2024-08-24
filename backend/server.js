@@ -1,3 +1,5 @@
+require('dotenv').config(); 
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -5,22 +7,18 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// Middleware
-app.use(cors({ origin: 'http://localhost:3000' }));
-app.use(bodyParser.json());
+app.use(cors()); 
+app.use(bodyParser.json()); 
 
-// MongoDB Atlas Connection URL
-const uri = "mongodb+srv://21dit065:d7pSHirv2qMZuS37@tanvi.i4xddoy.mongodb.net/student_data?retryWrites=true&w=majority&appName=Tanvi";
+const uri = process.env.MONGO_URI;
 
-// Connect to MongoDB Atlas
-mongoose.connect(uri, {  // Updated from mongoURI to uri
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
   .then(() => console.log('Connected to MongoDB Atlas'))
   .catch(err => console.error('Error connecting to MongoDB Atlas:', err));
 
-// Define Mongoose Schema and Model
 const registrationSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -32,10 +30,17 @@ const registrationSchema = new mongoose.Schema({
 
 const Registration = mongoose.model('Registration', registrationSchema);
 
-// API Endpoint to Handle Form Submission
 app.post('/register', async (req, res) => {
+  console.log('Received registration data:', req.body);
+
   try {
-    const existingUser = await Registration.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] });
+    
+    const { name, email, phone, semester, stream, futureGoal } = req.body;
+    if (!name || !email || !phone || !semester || !stream || !futureGoal) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const existingUser = await Registration.findOne({ $or: [{ email }, { phone }] });
     if (existingUser) {
       return res.status(400).json({ message: 'User with this email or phone number already exists' });
     }
@@ -44,6 +49,7 @@ app.post('/register', async (req, res) => {
     await newRegistration.save();
     res.status(201).json({ message: 'Registration successful' });
   } catch (error) {
+    console.error('Error during registration:', error);
     res.status(500).json({ message: 'Server error', error });
   }
 });
