@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-app.use(cors()); 
+app.use(cors({ origin: 'https://scansafe-frontend.firebaseapp.com' })); 
 app.use(bodyParser.json()); 
 
 const uri = process.env.MONGO_URI;
